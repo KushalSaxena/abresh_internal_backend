@@ -5,7 +5,7 @@ const SECRET_KEY = 'your_secret_key'; // Replace with a strong secret key for JW
 
 exports.register = async (req, res) => {
   try {
-    const { username, password, role } = req.body;
+    const { username, password, role , designation} = req.body;
 
     const existingUser = await User.findOne({ username });
     if (existingUser) {
@@ -14,13 +14,13 @@ exports.register = async (req, res) => {
 
     const hashPassword = await bcrypt.hash(password, 10);
 
-    const user = new User({ username, password: hashPassword, role });
+    const user = new User({ username, password: hashPassword, role, designation });
     await user.save();
 
-    const token = jwt.sign({ username: user.username, role: user.role }, SECRET_KEY, { expiresIn: '1h' });
+    const token = jwt.sign({ username: user.username, role: user.role, designation: user.designation }, SECRET_KEY, { expiresIn: '1h' });
 
     // Send response with the token
-    res.status(200).json({ token: token, role: user.role });
+    res.status(200).json({ token: token, role: user.role, designation: user.designation });
     } catch (error) {
     res.status(500).json({ message: 'Error registering user', error: error.message });
   }
@@ -28,7 +28,7 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
-    const { username, password, fcmToken } = req.body; // Capture FCM token from request
+    const { username, password} = req.body; // Capture FCM token from request
 
     const user = await User.findOne({ username });
     if (!user) return res.status(400).json({ message: 'User not found' });
@@ -37,12 +37,13 @@ exports.login = async (req, res) => {
     if (!validPassword) return res.status(400).json({ message: 'Invalid password' });
 
     
-    const token = jwt.sign({ username: user.username, role: user.role }, SECRET_KEY, { expiresIn: '7d' });
+    const token = jwt.sign({ username: user.username, role: user.role, desgination: user.designation }, SECRET_KEY, { expiresIn: '7d' });
 
     // Send response with the token and userId
     res.status(200).json({ 
       token: token, 
       role: user.role, 
+      desgination : user.designation
     });
   } catch (error) {
     res.status(500).json({ message: 'Error logging in', error: error.message });

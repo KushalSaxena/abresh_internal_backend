@@ -17,6 +17,7 @@ const salesRoutes = require('./routes/salesRoutes');
 const commentRoutes = require('./routes/commentRoutes.js');
 const leaveRoutes = require('./routes/leaveRoutes');
 const userDetailRoutes = require('./routes/userDetailRoutes.js');
+const attendanceRoutes = require('./routes/attendanceRoutes.js');
 const cloudinary = require('cloudinary');
 const serverPort = process.env.PORT || 3000;
 
@@ -51,6 +52,7 @@ app.use('/api/sales', salesRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api', leaveRoutes);
 app.use('/api/userDetails',userDetailRoutes);
+app.use('/api',attendanceRoutes);
 
 
 app.listen(serverPort, '0.0.0.0', () => console.log(`Server running on port ${serverPort}`));
