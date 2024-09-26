@@ -49,19 +49,24 @@ exports.getAllDeals = async (req, res) => {
 // Assuming description is used as a unique identifier for the deal.
 exports.updateDeliveryStatus = async (req, res) => {
   try {
-    const { description, status } = req.body; // Fetch the description and status from the request body.
+    const { description, status, negotiatedAmount } = req.body; // Fetch description, status, and negotiatedAmount from the request body.
 
     if (!description || !status) {
       return res.status(400).json({ error: 'Description and status are required' });
     }
 
-    // Find deal by description (or another unique field) and update its status
-    const updatedDeal = await Deal.findOneAndUpdate(
-      { description: description }, // Find by description or other unique identifier
-      { status: status },    
-      { negotiatedAmount : negotiatedAmount},        // Update status
-      { new: true }                  // Return the updated document
-    );
+    // Find the deal by description and update its status and optionally negotiatedAmount
+    const updateData = { status: status };
+if (negotiatedAmount) {
+  updateData.negotiatedAmount = negotiatedAmount;
+}
+
+const updatedDeal = await Deal.findOneAndUpdate(
+  { description: description }, 
+  updateData, 
+  { new: true }
+);
+
 
     if (!updatedDeal) {
       return res.status(404).json({ error: 'Deal not found' });
@@ -72,5 +77,27 @@ exports.updateDeliveryStatus = async (req, res) => {
     res.status(500).json({ error: 'Failed to update status' });
   }
 };
+
+// Delete a deal by description
+exports.deleteDeal = async (req, res) => {
+  try {
+    const { description } = req.params;  // Assuming description is passed as a URL parameter
+
+    if (!description) {
+      return res.status(400).json({ error: 'Description is required' });
+    }
+
+    const deletedDeal = await Deal.findOneAndDelete({ description: description });
+
+    if (!deletedDeal) {
+      return res.status(404).json({ error: 'Deal not found' });
+    }
+
+    res.status(200).json({ message: 'Deal deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete deal' });
+  }
+};
+
 
 

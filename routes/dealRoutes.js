@@ -11,5 +11,7 @@ router.get('/', dealController.getAllDeals);
 
 router.put('/', dealController.updateDeliveryStatus); // Add this line
 
+router.delete('/:description',dealController.deleteDeal);
+
 
 module.exports = router;

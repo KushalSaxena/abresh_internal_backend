@@ -17,7 +17,7 @@ const workSchema = new mongoose.Schema({
   startDate: { type: Date },
   endDate: { type: Date },
   file: { // Renamed 'image' to 'file' to handle both images and PDFs
-    public_id: { type: String, required: true },
+    public_id: { type: String},
     url: { type: String },
     format: { type: String }, // Added format to store file format (e.g., 'image/jpeg', 'application/pdf')
   },
