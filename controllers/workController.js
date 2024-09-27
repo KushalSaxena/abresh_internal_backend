@@ -8,7 +8,7 @@ const path = require('path');
 
 exports.postWork = async (req, res) => {
   try {
-    const { name, workDetail, description, priority, status, startDate, endDate, notes } = req.body;
+    const { name,email, contactNumber,  workDetail, description, priority, status, startDate, endDate, notes } = req.body;
     const userRole = req.user.role;
 
     let fileData = {};
@@ -28,6 +28,8 @@ exports.postWork = async (req, res) => {
     // Create a new work entry with the file data
     const work = new Work({
       name,
+      email,
+      contactNumber,
       workDetail,
       description,
       priority,
